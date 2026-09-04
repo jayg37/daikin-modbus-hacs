@@ -1,6 +1,8 @@
 """Vendored Daikin/Airzone Aidoo Modbus model."""
 
-from modbus_connection.model import Component, boolean, gauge, integer, raw_register
+from modbus_connection.model import Component, boolean, enum, gauge, integer, raw_register
+
+from .enums import HvacMode
 
 
 class DaikinAidoo(Component):
@@ -11,7 +13,7 @@ class DaikinAidoo(Component):
     power = boolean(0, writable=True)
     setpoint = gauge(1, 0.1, signed=False, writable=True, unit="°F")
     room_temperature = gauge(2, 0.1, signed=False, unit="°F")
-    hvac_mode = integer(3, signed=False, writable=True)
+    hvac_mode = enum(3, HvacMode, writable=True)
     fan_percentage = integer(4, signed=False, unit="%")
     louver = integer(5, signed=False)
     available_modes = raw_register(14)
