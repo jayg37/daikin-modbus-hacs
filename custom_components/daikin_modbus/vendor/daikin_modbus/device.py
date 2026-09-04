@@ -1,18 +1,14 @@
 """Vendored Daikin/Airzone Aidoo Modbus model."""
 
-from modbus_connection.model import Component, gauge, integer, raw_register
+from modbus_connection.model import Component, boolean, gauge, integer, raw_register
 
 
 class DaikinAidoo(Component):
-    """Model the complete documented register map.
-
-    Temperatures are Fahrenheit. Only registers whose writes were verified in
-    the original project are writable.
-    """
+    """Model the complete documented register map."""
 
     register_ranges = ((0, 5), (14, 15), (54, 58))
 
-    power = integer(0, signed=False, writable=True)
+    power = boolean(0, writable=True)
     setpoint = gauge(1, 0.1, signed=False, writable=True, unit="°F")
     room_temperature = gauge(2, 0.1, signed=False, unit="°F")
     hvac_mode = integer(3, signed=False, writable=True)
