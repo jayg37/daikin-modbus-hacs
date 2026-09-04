@@ -1,0 +1,15 @@
+homeassistant:
+  name: Daikin Modbus development
+  latitude: 0
+  longitude: 0
+  elevation: 0
+  unit_system: imperial
+  time_zone: UTC
+  external_url: http://localhost:8123
+  internal_url: http://localhost:8123
+
+logger:
+  default: info
+  logs:
+    custom_components.daikin_modbus: debug
+    modbus_connection: debug

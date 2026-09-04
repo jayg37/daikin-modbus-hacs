@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import DaikinConfigEntry, DaikinCoordinator
+from .entity import DaikinEntity
 
 _MODE_TO_HA = {1: HVACMode.AUTO, 2: HVACMode.COOL, 3: HVACMode.HEAT, 4: HVACMode.FAN_ONLY, 5: HVACMode.DRY}
 _HA_TO_MODE = {value: key for key, value in _MODE_TO_HA.items()}
@@ -16,14 +17,12 @@ _NAME_TO_FAN = {value: key for key, value in _FAN_TO_NAME.items()}
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: DaikinConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
-    """Set up the climate entity."""
+    """Set up the Daikin climate entity."""
     async_add_entities([DaikinClimate(entry.runtime_data)])
 
 
-class DaikinClimate(ClimateEntity):
-    """Daikin climate entity using the verified writable registers."""
-
-    _attr_has_entity_name = True
+class DaikinClimate(DaikinEntity, ClimateEntity):
+    """Daikin climate entity using verified writable registers."""
     _attr_name = None
     _attr_temperature_unit = UnitOfTemperature.FAHRENHEIT
     _attr_min_temp = 60
@@ -34,13 +33,7 @@ class DaikinClimate(ClimateEntity):
     _attr_fan_modes = list(_NAME_TO_FAN)
 
     def __init__(self, coordinator: DaikinCoordinator) -> None:
-        self.coordinator = coordinator
-        self._attr_unique_id = f"{coordinator.config_entry.entry_id}_climate"
-        self._attr_device_info = {"identifiers": {("daikin_modbus", coordinator.config_entry.entry_id)}, "manufacturer": "Daikin", "model": "Airzone Aidoo Modbus", "name": "Daikin HVAC"}
-
-    @property
-    def available(self) -> bool:
-        return self.coordinator.last_update_success
+        super().__init__(coordinator, "climate")
 
     @property
     def current_temperature(self) -> float | None:
@@ -52,7 +45,7 @@ class DaikinClimate(ClimateEntity):
 
     @property
     def hvac_mode(self) -> HVACMode | None:
-        if self.coordinator.data.power == 0:
+        if self.coordinator.data.power is False:
             return HVACMode.OFF
         return _MODE_TO_HA.get(self.coordinator.data.hvac_mode)
 
@@ -80,9 +73,9 @@ class DaikinClimate(ClimateEntity):
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         if hvac_mode is HVACMode.OFF:
-            await self.coordinator.device.write("power", 0)
+            await self.coordinator.device.write("power", False)
         else:
-            await self.coordinator.device.write("power", 1)
+            await self.coordinator.device.write("power", True)
             await self.coordinator.device.write("hvac_mode", _HA_TO_MODE[hvac_mode])
         await self.coordinator.async_request_refresh()
 
