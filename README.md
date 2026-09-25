@@ -6,13 +6,13 @@ This repository is the community-testable version of the Daikin Modbus integrati
 
 ## Requirements
 
-- Home Assistant with the new `modbus_connection` integration available.
+- Home Assistant 2026.9 or newer with the built-in `modbus` integration.
 - A Modbus TCP connection to a TCP-to-RS485 gateway such as the Elfin EW11.
 - Aidoo/Daikin Modbus unit ID, normally `1` for the tested installation.
 
 ## Installation
 
-Install through HACS as a custom repository, then restart Home Assistant. Add **Daikin Modbus** from Settings > Devices & services and select the existing Modbus connection.
+Install through HACS as a custom repository, then restart Home Assistant. Add **Daikin Modbus** from Settings > Devices & services and enter the Modbus TCP host, port, and unit ID. The integration obtains a shared Modbus unit from Home Assistant's built-in `modbus` integration.
 
 ## Hardware architecture
 
