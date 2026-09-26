@@ -9,5 +9,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/jayg37/daikin-modbus-hacs/issues",
   "loggers": ["modbus_connection", "daikin_modbus"],
-  "version": "0.1.1"
+  "version": "0.1.2"
 }
