@@ -6,9 +6,9 @@ from .enums import HvacMode
 
 
 class DaikinAidoo(Component):
-    """Model the complete documented register map."""
+    """Model the documented runtime register map."""
 
-    register_ranges = ((0, 5), (14, 15), (54, 58))
+    register_ranges = ((0, 5), (14, 15), (54, 55))
 
     power = boolean(0, writable=True)
     setpoint = gauge(1, 0.1, signed=False, writable=True, unit="°F")
@@ -19,6 +19,3 @@ class DaikinAidoo(Component):
     available_modes = raw_register(14)
     available_speeds = raw_register(15)
     fan_speed = integer(54, signed=False, writable=True)
-    slave_address = integer(56, signed=False)
-    baud_configuration = integer(57, signed=False)
-    parity_configuration = integer(58, signed=False)
